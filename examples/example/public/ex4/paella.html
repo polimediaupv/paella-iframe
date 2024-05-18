@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Youtube IFrame Player API - Example 4</title>
+    <style>
+      .current-values {
+        color: #666;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="player"></div>
+    
+    <div style="display:flex; gap: 5px;">
+      <button id="play">Play</button>
+      <button id="pause">Pause</button>
+      <button id="10s">+10s</button>
+    </div>
+
+    <script type="text/javascript">
+      var tag = document.createElement('script');
+      tag.id = 'iframe-demo';
+      tag.src = '/paella-iframe/js/paella-embedapi-youtube.iife.js';
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    
+      function paellaVideoIdToUrl(videoId) {
+        return '/paella-iframe/player/?id=belmar-multiresolution-remote';
+      }
+
+      
+      var playButton = document.getElementById('play');
+      var pauseButton = document.getElementById('pause');
+      var plus10sButton = document.getElementById('10s');
+
+      var player;
+      function onYouTubeIframeAPIReady() {        
+        player = new YT.Player('player', {
+          width: 1280,
+          height: 720,
+          videoId: 'M7lc1UVf-VE',
+          playerVars: { 'autoplay': 0, 'controls': 1 },
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange,
+            'onError': onPlayerError,
+            'onPlaybackQualityChange': onPlaybackQualityChange,
+            'onPlaybackRateChange': onPlaybackRateChange,
+            'onApiChange': onApiChange,
+            'onAutoplayBlocked': function(event) {
+              console.log('Autoplay blocked', event);
+            },
+
+          }
+        });
+      }
+
+      function onPlaybackQualityChange(event) {
+        console.log('Quality changed', event);
+      }
+      function onPlaybackRateChange(event) {
+        console.log('Rate changed', event);
+      }
+      function onApiChange(event) {
+        console.log('API changed', event);
+      }
+
+
+      function onPlayerReady(event) {
+        // event.target.setVolume(100);
+        // event.target.playVideo();
+      }
+
+      function onPlayerStateChange(event) {
+        console.log('State changed', event);
+      }
+      
+      function onPlayerError(event) {
+        console.log("Error: " + event)
+      }
+
+      // Bind events
+      playButton.addEventListener('click', function() {
+        player.playVideo();
+      });
+      pauseButton.addEventListener('click', function() {
+        player.pauseVideo();
+      });
+      plus10sButton.addEventListener('click', function() {
+        player.seekTo(player.getCurrentTime() + 10, true);
+      });
+    </script>
+  </body>
+</html>

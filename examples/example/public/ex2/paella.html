@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Youtube IFrame Player API - Example 2: Loud playback</title>
+  </head>
+  <body>
+    <div id="player"></div>
+    <script type="text/javascript">
+      
+      function paellaVideoIdToUrl(videoId) {
+        return '/paella-iframe/player/?id=belmar-multiresolution-remote';
+      }
+
+      function onYouTubeIframeAPIReady() {
+        const player = new YT.Player('player', {
+          width: 1280,
+          height: 720,
+          videoId: 'M7lc1UVf-VE',
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange,
+            'onError': onPlayerError
+          }
+        });
+      }
+
+      function onPlayerReady(event) {
+        console.log("Player ready");
+        event.target.setVolume(100);
+        event.target.playVideo();
+      }
+
+      function onPlayerStateChange(event) {
+        console.log('State changed: ' + event.data);
+      }
+
+      function onPlayerError(event) {
+        console.log("Error: " + event)
+      }
+    </script>
+    <script src="/paella-iframe/js/paella-embedapi-youtube.iife.js"></script>
+  </body>
+</html>

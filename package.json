@@ -1,0 +1,16 @@
+{
+  "name": "paella-iframe",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev"
+  },
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "devDependencies": {
+    "turbo": "^1.13.3"
+  }
+}
