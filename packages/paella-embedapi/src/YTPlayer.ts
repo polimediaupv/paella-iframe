@@ -180,13 +180,13 @@ export class YTPlayer {
     cueVideoByUrl(params: loadVideoByUrlParams): void
     cueVideoByUrl(param: string | loadVideoByUrlParams, startSeconds?: number) {
         if (typeof param === 'string') {
-            this._player.loadVideoByUrl(param);
+            const trimming = {startTrimming: startSeconds};
+            this._player.loadVideoByUrl(param, {trimming});
         }
         else {
-            this._player.loadVideoByUrl(param.mediaContentUrl);
+            const trimming = { startTrimming: param.startSeconds, endTrimming: param.endSeconds }
+            this._player.loadVideoByUrl(param.mediaContentUrl, {trimming});
         }
-
-        // TODO: implement startSeconds and endSeconds
     }
 
     /**

@@ -19,6 +19,13 @@ export type PlayerInitParams = {
     onEvents?: OnEventCallback;
 }
 
+type LoadVideoParams = {
+    trimming?: {
+        startTrimming?: number,
+        endTrimming?: number
+    }
+}
+
 export class Player {
     static Events = Events;
     _functionCallingId: number = 0;
@@ -76,13 +83,43 @@ export class Player {
         console.log('Player created', initParams)
     }
 
-    cueVideoByUrl(mediaContentUrl:string): void {
+    cueVideoByUrl(mediaContentUrl:string, params?:LoadVideoParams): void {
+        if (params?.trimming && params.trimming.startTrimming && params.trimming.endTrimming) {
+            this.bindEvent(Events.PLAYER_LOADED, async () => {
+                // Retrieve video duration in case a default trim end time is needed
+                const videoDuration = await this.duration() //paella.videoManifest?.metadata?.duration;
+                // Retrieve trimming data
+                const trimmingData = {
+                    start: await this.trimStart() ?? 0,
+                    end: await this.trimEnd() ?? videoDuration
+                };
+
+                let startTrimming: number = 0;  // default start time
+                let endTrimming: number = videoDuration; // raw video duration;
+
+                if (params?.trimming?.startTrimming) {
+                    startTrimming = trimmingData.start + Math.floor(params.trimming.startTrimming);
+                }
+                if (params?.trimming?.endTrimming) {
+                    endTrimming = Math.min(trimmingData.start + Math.floor(params.trimming.endTrimming), videoDuration);
+                }
+
+                this._functionCalling("setTrimming", {
+                    enabled: true,
+                    start: startTrimming,
+                    end: endTrimming
+                });
+            });
+        }
+
         if (this._iFrame) {
             this._iFrame.src = mediaContentUrl;
         }
+
+        // TODO: implement startSeconds and endSeconds
     }
-    loadVideoByUrl(mediaContentUrl:string): void {
-        this.cueVideoByUrl(mediaContentUrl);
+    loadVideoByUrl(mediaContentUrl:string, params?:LoadVideoParams): void {
+        this.cueVideoByUrl(mediaContentUrl, params);
     }
 
 
@@ -220,15 +257,15 @@ export class Player {
     }
 
     isTrimEnabled() {
-        return this._functionCalling("isTrimEnabled");
+        return this._functionCalling<boolean>("isTrimEnabled");
     }
 
     trimStart() {
-        return this._functionCalling("trimStart");
+        return this._functionCalling<number>("trimStart");
     }
 
     trimEnd() {
-        return this._functionCalling("trimEnd");
+        return this._functionCalling<number>("trimEnd");
     }
 
     setTrimming({ enabled, start, end }: { enabled: boolean, start: number, end: number }) {
