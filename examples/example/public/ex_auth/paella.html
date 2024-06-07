@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Youtube IFrame Player API - Example 2: Loud playback</title>
+  </head>
+  <body>
+    <div id="player"></div>
+    <script type="text/javascript">
+      
+      let player = null;
+
+      function paellaVideoIdToUrl(videoId) {
+        return `/paella-iframe/player/?id=${videoId}`;
+      }
+
+      function onPaellaAuthRequired() {
+        alert("Auth required event received.\nImplement here the authentication process.\nIn this demo, we will load a video with a different id.");        
+        // In a real scenario, you should implement here the authentication process.
+        // Normally, you will redirect to a login page, and then redirect back to the player.
+        // For this demo, we will just load a different video.
+        player.loadVideoById('belmar-multiresolution-remote');
+      }
+
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          width: 1280,
+          height: 720,
+          videoId: 'test-auth-videoId',
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange,
+            'onError': onPlayerError
+          }
+        });
+      }
+
+      function onPlayerReady(event) {
+        console.log("Player ready");
+        event.target.setVolume(100);
+        event.target.playVideo();
+      }
+
+      function onPlayerStateChange(event) {
+        console.log('State changed: ' + event.data);
+      }
+
+      function onPlayerError(event) {
+        console.log("Error: " + event)
+      }
+    </script>
+    <script src="/paella-iframe/js/paella-embedapi-youtube.iife.js"></script>
+  </body>
+</html>

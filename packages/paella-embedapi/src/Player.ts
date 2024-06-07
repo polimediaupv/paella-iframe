@@ -3,6 +3,7 @@ import Events from "./Events";
 declare global {
     interface Window {
         paellaVideoIdToUrl?: VideoIdToUrlCallback
+        onPaellaAuthRequired?: () => void
     }
 }
 
@@ -16,6 +17,7 @@ export type PlayerInitParams = {
     height?: number | string,
     videoId?: string,
     videoIdToUrl?: VideoIdToUrlCallback,
+    onPaellaAuthRequired?: () => void,
     onEvents?: OnEventCallback;
 }
 
@@ -38,10 +40,12 @@ export class Player {
     _onEvents: OnEventCallback | null = null;
     _iFrame: HTMLIFrameElement;
     _videoIdToUrl: ((videoId: string) => string) | null = null;
+    _onPaellaAuthRequired: (() => void) | null = null;
 
     constructor(containerElement:HTMLElement|string, initParams:PlayerInitParams = {}) {
         this._onEvents = initParams.onEvents ?? null;
         this._videoIdToUrl = initParams.videoIdToUrl ?? window.paellaVideoIdToUrl ?? null;
+        this._onPaellaAuthRequired = initParams.onPaellaAuthRequired ?? window.onPaellaAuthRequired ?? null;
 
         window.addEventListener('message', this, false);
         
@@ -125,7 +129,11 @@ export class Player {
 
     handleEvent(event: MessageEvent) {
         if (event.data.sender == this._iFrame?.name) {
-            // console.log('handleEvent', event.data)
+            if (event.data.event === 'paella:iFrame:auth') {
+                if (this._onPaellaAuthRequired !== null) {
+                    this._onPaellaAuthRequired();
+                }
+            }            
             if (this._onEvents) {
                 this._onEvents(event.data.event, event.data.params);
             }

@@ -57,6 +57,10 @@ export default class IFrameApiPlugin extends EventLogPlugin {
     }
   }
 
+  sendAuthenticationRequestToParent() {
+    this.onEvent("paella:iFrame:auth", {});
+  }
+
   async handleEvent(event) {
     const eventName = event?.data?.event;
     if (!eventName?.startsWith('paella:')) {
