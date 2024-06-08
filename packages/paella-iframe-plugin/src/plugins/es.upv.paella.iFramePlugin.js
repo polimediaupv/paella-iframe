@@ -57,8 +57,18 @@ export default class IFrameApiPlugin extends EventLogPlugin {
     }
   }
 
-  sendAuthenticationRequestToParent() {
+  async sendAuthenticationRequestToParent({showLoader, stopExecution} = {}) {
     this.onEvent("paella:iFrame:auth", {});
+    
+    if (showLoader === true) {
+      // Create a loader spinner.
+      player._loader = new player.initParams.Loader(player);
+      player._loader.create();
+    }
+    if (stopExecution === true) {
+      // We need to interrupt the player loading to redirect the user to the auth page.
+      await new Promise(() => {});
+    }
   }
 
   async handleEvent(event) {
@@ -103,7 +113,6 @@ export default class IFrameApiPlugin extends EventLogPlugin {
 
 
   async handleFunctionCalling({func, params, resolveId}) {
-    this.player.log.info(`IFrameApiPlugin: handleFunctionCalling ${func}(${JSON.stringify(params)})`, 'IFrameApiPlugin');
     let response;
     let error;
 

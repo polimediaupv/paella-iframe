@@ -25,18 +25,12 @@ window.onload = async () => {
             if ( url.search("/test-auth-videoId/data.json") > 0) {
                 const iFramePlugin = player.getPlugin("es.upv.paella.iFramePlugin")?.eventLog;
                 if (iFramePlugin?.isEnabled()) {
-                    // Create a loader spinner.
-                    // player._loader = new player.initParams.Loader(player);
-                    // player._loader.create();
                     // Require authentication from the parent iFrame.
-                    // iFramePlugin?.sendAuthenticationRequestToParent();
-                    iFramePlugin?.onEvent("paella:iFrame:auth", {});
-                    // We need to interrupt the player loading to redirect the user to the auth page.
-                    // await new Promise(() => {});
+                    await iFramePlugin?.sendAuthenticationRequestToParent({showLoader:true, stopExecution:true});
                 }
             }
             
-            return defaultLoadVideoManifestFunction(url, config, player)
+            return await defaultLoadVideoManifestFunction(url, config, player)
         }
     };
     
