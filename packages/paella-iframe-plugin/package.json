@@ -1,6 +1,6 @@
 {
 	"name": "paella-iframe-plugin",
-	"version": "1.48.0",
+	"version": "0.0.1",
 	"description": "It contains iframe plugin for controling a embebed player",
 	"private": false,
 	"main": "src/index.js",
