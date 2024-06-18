@@ -1,7 +1,7 @@
 {
   "name": "example",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,14 +9,14 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "paella-embedapi": "^0.0.1",
+    "paella-embedapi": "^0.0.2",
     "vite": "^5.2.0",
     "vite-plugin-static-copy": "^1.0.4"
   },
   "dependencies": {
     "paella-basic-plugins": "^1.31.2",
     "paella-core": "^1.37.2",
-    "paella-iframe-plugin": "^0.0.1",
+    "paella-iframe-plugin": "^0.0.2",
     "paella-skins": "^1.32.0",
     "paella-slide-plugins": "^1.8.1",
     "paella-user-tracking": "^1.8.0",
